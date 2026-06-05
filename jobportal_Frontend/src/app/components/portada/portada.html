@@ -18,13 +18,11 @@
           <a routerLink="/ofertas" class="btn btn-primary btn-lg px-4">
             <i class="bi bi-search me-2"></i>Explorar ofertas
           </a>
-       
           <a routerLink="/registro" *ngIf="!auth.isLoggedIn" class="btn btn-lg px-4"
             style="background:rgba(255,255,255,.08);color:#e2e8f0;border:1px solid rgba(255,255,255,.15)">
             <i class="bi bi-person-plus me-2"></i>Crear cuenta gratis
           </a>
         </div>
-       
         <div class="row g-3">
           <div class="col-4" *ngFor="let s of stats">
             <div class="stat-card">
@@ -123,8 +121,8 @@
   </div>
 </section>
 
-
-<section class="py-5" style="background:linear-gradient(135deg,#0f172a,#1e3a5f)">
+<!-- solo se muestra si NO está logueado -->
+<section class="py-5" style="background:linear-gradient(135deg,#0f172a,#1e3a5f)" *ngIf="!auth.isLoggedIn">
   <div class="container py-4 text-center text-white">
     <h2 class="fw-bold mb-3">¿Listo para empezar?</h2>
     <p class="mb-4" style="color:#94a3b8;max-width:500px;margin:auto">
