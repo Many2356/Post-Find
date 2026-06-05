@@ -62,11 +62,21 @@
               <!-- Info candidato -->
               <div class="flex-grow-1">
                 <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-                 
                   <h6 class="fw-bold mb-0">{{ app.applicantUsername }}</h6>
                   <span *ngIf="updatingId === app.id"
                     class="spinner-border spinner-border-sm text-primary"></span>
                 </div>
+
+                <!-- Nombre completo y email -->
+                <div *ngIf="userInfo[app.applicantId]" class="mb-1 d-flex flex-wrap gap-3">
+                  <span *ngIf="userInfo[app.applicantId].fullName" class="small fw-semibold text-dark">
+                    <i class="bi bi-person-badge me-1 text-primary"></i>{{ userInfo[app.applicantId].fullName }}
+                  </span>
+                  <span *ngIf="userInfo[app.applicantId].email" class="small text-muted">
+                    <i class="bi bi-envelope me-1"></i>{{ userInfo[app.applicantId].email }}
+                  </span>
+                </div>
+
                 <p class="text-muted small mb-0">
                   <i class="bi bi-clock me-1"></i>Solicitó el {{ app.appliedAt | date:'dd/MM/yyyy · HH:mm' }}
                 </p>

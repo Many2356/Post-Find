@@ -3,8 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationService } from '../../services/application-service';
 import { JobOfferService } from '../../services/job-offer-service';
 import { AuthService } from '../../services/auth-service';
+import { UserService } from '../../services/user-service';
 import { Application } from '../../models/application';
 import { JobOffer } from '../../models/job-offer';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-candidatos',
@@ -18,8 +21,10 @@ export class Candidatos implements OnInit {
   error = '';
   updatingId: number | null = null;
 
-  
   selectedStatus: { [id: number]: string } = {};
+
+  // Mapa applicantId -> { fullName, email }
+  userInfo: { [userId: number]: { fullName?: string; email?: string } } = {};
 
   readonly ESTADOS = ['PENDIENTE', 'REVISADO', 'ACEPTADO', 'RECHAZADO'];
 
@@ -29,6 +34,7 @@ export class Candidatos implements OnInit {
     private applicationService: ApplicationService,
     private jobOfferService: JobOfferService,
     public auth: AuthService,
+    private userService: UserService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -58,10 +64,32 @@ export class Candidatos implements OnInit {
         this.applicationService.getByOffer(offerId).subscribe({
           next: (apps) => {
             this.applications = apps;
-            // Inicializar el mapa con el estado real de cada solicitud
             apps.forEach(a => this.selectedStatus[a.id] = a.status);
-            this.loading = false;
-            this.cdr.detectChanges();
+
+            // Cargar fullName y email de cada candidato
+            const uniqueIds = [...new Set(apps.map(a => a.applicantId))];
+            if (uniqueIds.length === 0) {
+              this.loading = false;
+              this.cdr.detectChanges();
+              return;
+            }
+
+            const requests = uniqueIds.map(id =>
+              this.userService.getUser(id).pipe(catchError(() => of(null)))
+            );
+
+            forkJoin(requests).subscribe(users => {
+              users.forEach((user, i) => {
+                if (user) {
+                  this.userInfo[uniqueIds[i]] = {
+                    fullName: user.fullName,
+                    email: user.email
+                  };
+                }
+              });
+              this.loading = false;
+              this.cdr.detectChanges();
+            });
           },
           error: () => {
             this.error = 'Error al cargar los candidatos.';
@@ -84,14 +112,12 @@ export class Candidatos implements OnInit {
 
     this.applicationService.updateStatus(app.id, this.auth.currentUser!.id, nuevoEstado).subscribe({
       next: (updated) => {
-        // Actualizar tanto el objeto como el mapa
         app.status = updated.status;
         this.selectedStatus[app.id] = updated.status;
         this.updatingId = null;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        // Revertir el select al valor anterior si falla
         this.selectedStatus[app.id] = app.status;
         alert(err.error?.error || 'Error al cambiar el estado.');
         this.updatingId = null;
