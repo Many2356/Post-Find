@@ -1,0 +1,87 @@
+<div class="auth-wrapper">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-5 col-lg-4">
+        <div class="card auth-card shadow-lg">
+          <div class="card-body p-4 p-md-5">
+
+            <div class="text-center mb-4">
+              <div class="mb-3" style="font-size:3rem">
+                <i class="bi bi-person-circle" style="color:#2563eb"></i>
+              </div>
+              <h2 class="fw-bold mb-1" style="font-size:1.8rem">
+                <span style="color:#2563eb">Post</span><span style="color:#64748b">&</span><span style="color:#7c3aed">Find</span>
+              </h2>
+              <p class="text-muted mb-0">Inicia sesión en tu cuenta</p>
+            </div>
+
+            <!-- Error general del servidor -->
+            <div class="alert alert-danger py-2 small d-flex align-items-center gap-2" *ngIf="errors.general">
+              <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+              <span>{{ errors.general }}</span>
+            </div>
+
+            <form (ngSubmit)="onSubmit()" novalidate>
+
+              <!-- Usuario -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold small">Usuario</label>
+                <div class="input-group" [class.is-invalid]="errors.username">
+                  <span class="input-group-text" [class.border-danger]="errors.username">
+                    <i class="bi bi-at"></i>
+                  </span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [class.is-invalid]="errors.username"
+                    [(ngModel)]="form.username"
+                    name="username"
+                    placeholder="Tu nombre de usuario"
+                    (input)="errors.username = undefined"
+                    autofocus>
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="errors.username">
+                  <i class="bi bi-exclamation-circle me-1"></i>{{ errors.username }}
+                </div>
+              </div>
+
+              <!-- Contraseña -->
+              <div class="mb-4">
+                <label class="form-label fw-semibold small">Contraseña</label>
+                <div class="input-group">
+                  <span class="input-group-text" [class.border-danger]="errors.password">
+                    <i class="bi bi-lock-fill"></i>
+                  </span>
+                  <input
+                    type="password"
+                    class="form-control"
+                    [class.is-invalid]="errors.password"
+                    [(ngModel)]="form.password"
+                    name="password"
+                    placeholder="Tu contraseña"
+                    (input)="errors.password = undefined">
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="errors.password">
+                  <i class="bi bi-exclamation-circle me-1"></i>{{ errors.password }}
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" [disabled]="loading">
+                <span class="spinner-border spinner-border-sm me-2" *ngIf="loading"></span>
+                <i class="bi bi-box-arrow-in-right me-2" *ngIf="!loading"></i>
+                {{ loading ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+              </button>
+
+            </form>
+
+            <hr class="my-4">
+            <p class="text-center text-muted small mb-0">
+              ¿No tienes cuenta?
+              <a routerLink="/registro" class="text-primary fw-semibold">Regístrate gratis</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
