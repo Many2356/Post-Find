@@ -15,7 +15,7 @@ import java.util.Map;
  
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://jobportal-frontend-u7wp.onrender.com")
 public class UserController {
     @Autowired
     private UserService userService;
