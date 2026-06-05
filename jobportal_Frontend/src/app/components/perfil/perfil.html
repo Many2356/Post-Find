@@ -28,7 +28,7 @@
       <!-- Columna izquierda -->
       <div class="col-lg-4">
 
-        <!-- Éxito -->
+        <!-- Éxito guardado perfil -->
         <div class="alert alert-success py-2 small d-flex align-items-center gap-2" *ngIf="success">
           <i class="bi bi-check-circle-fill flex-shrink-0"></i>{{ success }}
         </div>
@@ -132,6 +132,62 @@
           </ng-container>
         </div>
 
+        <!-- ── Cambio de rol ─────────-->
+        <div class="card p-4 mb-4" style="border-left: 4px solid #7c3aed;">
+          <h6 class="fw-bold mb-1" style="color:#7c3aed;">
+            <i class="bi bi-arrow-left-right me-2"></i>Cambiar rol
+          </h6>
+          <p class="text-muted small mb-3">
+            Actualmente eres <strong>{{ auth.isEmpresario ? 'Empresario' : 'Trabajador' }}</strong>.
+            Puedes cambiar a <strong>{{ nuevoRolLabel }}</strong>.
+          </p>
+
+          <!-- Aviso informativo según rol actual -->
+          <div class="alert py-2 small mb-3"
+            [class.alert-warning]="auth.isEmpresario"
+            [class.alert-info]="auth.isTrabajador">
+            <i class="bi me-2"
+              [class.bi-exclamation-triangle]="auth.isEmpresario"
+              [class.bi-info-circle]="auth.isTrabajador"></i>
+            <ng-container *ngIf="auth.isEmpresario">
+              Al cambiar a Trabajador ya no podrás gestionar ofertas de empleo.
+              Tus ofertas publicadas seguirán existiendo pero no podrás editarlas.
+            </ng-container>
+            <ng-container *ngIf="auth.isTrabajador">
+              Al cambiar a Empresario podrás publicar ofertas de empleo.
+              Tus solicitudes activas seguirán visibles para los empresarios.
+            </ng-container>
+          </div>
+
+          <!-- Feedback éxito / error -->
+          <div class="alert alert-success py-2 small d-flex align-items-center gap-2 mb-3" *ngIf="rolSuccess">
+            <i class="bi bi-check-circle-fill flex-shrink-0"></i>{{ rolSuccess }}
+          </div>
+          <div class="alert alert-danger py-2 small d-flex align-items-center gap-2 mb-3" *ngIf="rolError">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>{{ rolError }}
+          </div>
+
+          <!-- Checkbox de confirmación -->
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="rolConfirmCheck"
+              [(ngModel)]="rolConfirm"
+              (change)="rolError = ''">
+            <label class="form-check-label small" for="rolConfirmCheck">
+              Entiendo que quiero cambiar mi rol a <strong>{{ nuevoRolLabel }}</strong>
+            </label>
+          </div>
+
+          <button class="btn btn-sm w-100 fw-semibold"
+            style="background:#7c3aed;color:#fff;border:none;"
+            (click)="cambiarRol()"
+            [disabled]="rolLoading">
+            <span class="spinner-border spinner-border-sm me-1" *ngIf="rolLoading"></span>
+            <i class="bi bi-arrow-left-right me-1" *ngIf="!rolLoading"></i>
+            {{ rolLoading ? 'Cambiando...' : 'Cambiar a ' + nuevoRolLabel }}
+          </button>
+        </div>
+        <!-- ──────────────────────-->
+
         <!-- Zona de peligro -->
         <div class="card p-4 border-danger">
           <h6 class="fw-bold text-danger mb-2">
@@ -180,11 +236,9 @@
                       <i class="bi bi-clock me-1"></i>{{ app.appliedAt | date:'dd/MM/yyyy' }}
                     </p>
                   </div>
-                  <!-- ← NUEVO: badge de estado + botón retirar -->
                   <div class="d-flex flex-column align-items-end gap-2 flex-shrink-0">
                     <span class="badge bg-{{ getStatusClass(app.status) }}">{{ app.status }}</span>
-                    <button
-                      class="btn btn-outline-danger btn-sm"
+                    <button class="btn btn-outline-danger btn-sm"
                       (click)="retirarSolicitud(app)"
                       title="Retirar solicitud">
                       <i class="bi bi-x-circle me-1"></i>Retirar

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.devjobs.dto;
 
 import com.devjobs.model.User;
@@ -9,7 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public class DTOs {
-    // Auth DTOs
+
+    // ── Auth DTOs ─────────────────────────────────────────────
     public static class RegisterRequest {
         @NotBlank private String username;
         @NotBlank @Email private String email;
@@ -17,7 +14,7 @@ public class DTOs {
         @NotBlank private String role;
         private String fullName;
         private String company;
- 
+
         public String getUsername() { return username; }
         public void setUsername(String username) { this.username = username; }
         public String getEmail() { return email; }
@@ -31,17 +28,17 @@ public class DTOs {
         public String getCompany() { return company; }
         public void setCompany(String company) { this.company = company; }
     }
- 
+
     public static class LoginRequest {
         @NotBlank private String username;
         @NotBlank private String password;
- 
+
         public String getUsername() { return username; }
         public void setUsername(String username) { this.username = username; }
         public String getPassword() { return password; }
         public void setPassword(String password) { this.password = password; }
     }
- 
+
     public static class UserResponse {
         private Long id;
         private String username;
@@ -53,7 +50,7 @@ public class DTOs {
         private String website;
         private String skills;
         private String company;
- 
+
         public static UserResponse fromUser(User user) {
             UserResponse res = new UserResponse();
             res.id = user.getId();
@@ -68,7 +65,7 @@ public class DTOs {
             res.company = user.getCompany();
             return res;
         }
- 
+
         public Long getId() { return id; }
         public String getUsername() { return username; }
         public String getEmail() { return email; }
@@ -80,7 +77,7 @@ public class DTOs {
         public String getSkills() { return skills; }
         public String getCompany() { return company; }
     }
- 
+
     public static class UpdateProfileRequest {
         private String fullName;
         private String bio;
@@ -89,7 +86,8 @@ public class DTOs {
         private String skills;
         private String company;
         private String email;
- 
+        private String role;   //  permite cambiar el rol
+
         public String getFullName() { return fullName; }
         public void setFullName(String fullName) { this.fullName = fullName; }
         public String getBio() { return bio; }
@@ -104,9 +102,11 @@ public class DTOs {
         public void setCompany(String company) { this.company = company; }
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }
+        public String getRole() { return role; }
+        public void setRole(String role) { this.role = role; }
     }
- 
-    // JobOffer DTOs
+
+    // ── JobOffer DTOs ─────────────────────────────────────────
     public static class JobOfferRequest {
         @NotBlank private String title;
         private String description;
@@ -117,7 +117,7 @@ public class DTOs {
         private String experienceLevel;
         private String technologies;
         private String remote;
- 
+
         public String getTitle() { return title; }
         public void setTitle(String title) { this.title = title; }
         public String getDescription() { return description; }
@@ -137,7 +137,7 @@ public class DTOs {
         public String getRemote() { return remote; }
         public void setRemote(String remote) { this.remote = remote; }
     }
- 
+
     public static class JobOfferResponse {
         private Long id;
         private String title;
@@ -154,7 +154,7 @@ public class DTOs {
         private String employerUsername;
         private String createdAt;
         private int applicantsCount;
- 
+
         public Long getId() { return id; }
         public void setId(Long id) { this.id = id; }
         public String getTitle() { return title; }
@@ -186,14 +186,14 @@ public class DTOs {
         public int getApplicantsCount() { return applicantsCount; }
         public void setApplicantsCount(int applicantsCount) { this.applicantsCount = applicantsCount; }
     }
- 
-    // Application DTOs
+
+    // ── Application DTOs ──────────────────────────────────────
     public static class ApplicationRequest {
         private String coverLetter;
         public String getCoverLetter() { return coverLetter; }
         public void setCoverLetter(String coverLetter) { this.coverLetter = coverLetter; }
     }
- 
+
     public static class ApplicationResponse {
         private Long id;
         private Long jobOfferId;
@@ -204,7 +204,7 @@ public class DTOs {
         private String status;
         private String coverLetter;
         private String appliedAt;
- 
+
         public Long getId() { return id; }
         public void setId(Long id) { this.id = id; }
         public Long getJobOfferId() { return jobOfferId; }

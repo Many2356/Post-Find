@@ -27,6 +27,7 @@ export interface LoginRequest {
 
 export interface UpdateProfileRequest {
   fullName?: string;
+  role?: string;
   bio?: string;
   location?: string;
   website?: string;

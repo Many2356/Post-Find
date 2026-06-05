@@ -20,6 +20,12 @@ export class Perfil implements OnInit {
   applications: Application[] = [];
   myOffers: JobOffer[] = [];
 
+  // cambio de rol
+  rolLoading = false;
+  rolSuccess = '';
+  rolError = '';
+  rolConfirm = false;
+
   constructor(
     public auth: AuthService,
     private userService: UserService,
@@ -91,6 +97,52 @@ export class Perfil implements OnInit {
     });
   }
 
+  //  Cambio de rol 
+  get nuevoRol(): string {
+    return this.auth.isEmpresario ? 'TRABAJADOR' : 'EMPRESARIO';
+  }
+
+  get nuevoRolLabel(): string {
+    return this.auth.isEmpresario ? 'Trabajador' : 'Empresario';
+  }
+
+  cambiarRol() {
+    if (!this.rolConfirm) { this.rolError = 'Debes marcar la casilla de confirmación.'; return; }
+    this.rolLoading = true;
+    this.rolError   = '';
+    this.rolSuccess  = '';
+
+    this.userService.updateProfile(this.auth.currentUser!.id, { role: this.nuevoRol }).subscribe({
+      next: (user) => {
+        this.auth.updateUser(user);
+        this.rolLoading = false;
+        this.rolConfirm = false;
+        this.rolSuccess = `Rol cambiado a ${this.nuevoRolLabel} correctamente.`;
+        // recargar datos según nuevo rol
+        this.applications = [];
+        this.myOffers = [];
+        if (this.auth.isTrabajador) {
+          this.applicationService.getByUser(user.id).subscribe({
+            next: (data) => { this.applications = data; this.cdr.detectChanges(); }
+          });
+        }
+        if (this.auth.isEmpresario) {
+          this.jobOfferService.getByEmployer(user.id).subscribe({
+            next: (data) => { this.myOffers = data; this.cdr.detectChanges(); }
+          });
+        }
+        this.cdr.detectChanges();
+        setTimeout(() => { this.rolSuccess = ''; this.cdr.detectChanges(); }, 4000);
+      },
+      error: (err) => {
+        this.rolLoading = false;
+        this.rolError = err.error?.error || 'Error al cambiar el rol.';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  // ─────────────────────────────
+
   deleteAccount() {
     this.deleteError = '';
     if (this.deleteConfirm !== this.auth.currentUser!.username) {
@@ -106,7 +158,6 @@ export class Perfil implements OnInit {
     });
   }
 
-  //  retirar solicitud desde el perfil
   retirarSolicitud(app: Application) {
     if (!confirm('¿Retirar tu solicitud para "' + app.jobOfferTitle + '"?')) return;
     this.applicationService.withdraw(app.id, this.auth.currentUser!.id).subscribe({
@@ -114,9 +165,7 @@ export class Perfil implements OnInit {
         this.applications = this.applications.filter(a => a.id !== app.id);
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        alert(err.error?.error || 'Error al retirar la solicitud.');
-      }
+      error: (err) => { alert(err.error?.error || 'Error al retirar la solicitud.'); }
     });
   }
 
