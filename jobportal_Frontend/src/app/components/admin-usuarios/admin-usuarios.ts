@@ -16,7 +16,7 @@ export class AdminUsuarios implements OnInit {
   loading = true;
   error = '';
 
-  // Modal crear/editar
+  // crear/editar
   showModal = false;
   modalMode: 'crear' | 'editar' = 'crear';
   selectedUser: User | null = null;
@@ -61,7 +61,7 @@ export class AdminUsuarios implements OnInit {
     });
   }
 
-  // Modal 
+  
   openCrear() {
     this.modalMode = 'crear';
     this.selectedUser = null;

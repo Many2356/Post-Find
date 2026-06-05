@@ -97,7 +97,7 @@ export class Perfil implements OnInit {
     });
   }
 
-  //  Cambio de rol 
+  //  - Cambio de rol 
   get nuevoRol(): string {
     return this.auth.isEmpresario ? 'TRABAJADOR' : 'EMPRESARIO';
   }
@@ -141,7 +141,7 @@ export class Perfil implements OnInit {
       }
     });
   }
-  // ─────────────────────────────
+  // ────────────────
 
   deleteAccount() {
     this.deleteError = '';
