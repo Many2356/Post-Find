@@ -89,9 +89,9 @@
                 </label>
                 <select
                   class="form-select form-select-sm"
-                  [value]="app.status"
+                  [(ngModel)]="app.status"
                   [disabled]="updatingId === app.id"
-                  (change)="cambiarEstado(app, $any($event.target).value)">
+                  (ngModelChange)="cambiarEstado(app, $event)">
                   <option *ngFor="let e of ESTADOS" [value]="e">{{ e }}</option>
                 </select>
               </div>
