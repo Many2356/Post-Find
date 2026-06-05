@@ -16,7 +16,10 @@ export class Candidatos implements OnInit {
   applications: Application[] = [];
   loading = true;
   error = '';
-  updatingId: number | null = null;  // id de la solicitud que está actualizándose
+  updatingId: number | null = null;
+
+  
+  selectedStatus: { [id: number]: string } = {};
 
   readonly ESTADOS = ['PENDIENTE', 'REVISADO', 'ACEPTADO', 'RECHAZADO'];
 
@@ -30,24 +33,20 @@ export class Candidatos implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Solo empresarios pueden entrar
     if (!this.auth.isEmpresario) {
       this.router.navigate(['/']);
       return;
     }
 
     const offerId = Number(this.route.snapshot.paramMap.get('id'));
-
     if (!offerId || isNaN(offerId)) {
       this.error = 'Oferta no válida.';
       this.loading = false;
       return;
     }
 
-    // Cargar datos de la oferta para mostrar el título
     this.jobOfferService.getById(offerId).subscribe({
       next: (oferta) => {
-        // Verificar que la oferta pertenece a este empresario
         if (oferta.employerId !== this.auth.currentUser!.id) {
           this.error = 'No tienes permiso para ver los candidatos de esta oferta.';
           this.loading = false;
@@ -56,10 +55,11 @@ export class Candidatos implements OnInit {
         }
         this.oferta = oferta;
 
-        // Cargar candidatos
         this.applicationService.getByOffer(offerId).subscribe({
           next: (apps) => {
             this.applications = apps;
+            // Inicializar el mapa con el estado real de cada solicitud
+            apps.forEach(a => this.selectedStatus[a.id] = a.status);
             this.loading = false;
             this.cdr.detectChanges();
           },
@@ -84,13 +84,15 @@ export class Candidatos implements OnInit {
 
     this.applicationService.updateStatus(app.id, this.auth.currentUser!.id, nuevoEstado).subscribe({
       next: (updated) => {
-        // Actualizar el estado en la lista local sin recargar
-        const idx = this.applications.findIndex(a => a.id === app.id);
-        if (idx !== -1) this.applications[idx].status = updated.status;
+        // Actualizar tanto el objeto como el mapa
+        app.status = updated.status;
+        this.selectedStatus[app.id] = updated.status;
         this.updatingId = null;
         this.cdr.detectChanges();
       },
       error: (err) => {
+        // Revertir el select al valor anterior si falla
+        this.selectedStatus[app.id] = app.status;
         alert(err.error?.error || 'Error al cambiar el estado.');
         this.updatingId = null;
         this.cdr.detectChanges();
@@ -99,23 +101,8 @@ export class Candidatos implements OnInit {
   }
 
   getStatusClass(status: string): string {
-    const map: any = {
-      PENDIENTE: 'warning',
-      REVISADO: 'info',
-      ACEPTADO: 'success',
-      RECHAZADO: 'danger'
-    };
+    const map: any = { PENDIENTE: 'warning', REVISADO: 'info', ACEPTADO: 'success', RECHAZADO: 'danger' };
     return map[status] || 'secondary';
-  }
-
-  getStatusIcon(status: string): string {
-    const map: any = {
-      PENDIENTE: 'bi-clock',
-      REVISADO: 'bi-eye',
-      ACEPTADO: 'bi-check-circle-fill',
-      RECHAZADO: 'bi-x-circle-fill'
-    };
-    return map[status] || 'bi-circle';
   }
 
   volver() {
