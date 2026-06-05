@@ -1,4 +1,3 @@
-
 package com.devjobs.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -55,7 +54,7 @@ public class User {
     }
  
     public enum Role {
-        TRABAJADOR, EMPRESARIO
+        TRABAJADOR, EMPRESARIO, ADMIN
     }
  
     // Constructors

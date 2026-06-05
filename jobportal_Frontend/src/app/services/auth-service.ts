@@ -17,6 +17,7 @@ export class AuthService {
 
   get currentUser(): User | null  { return this.sub.value; }
   get isLoggedIn(): boolean       { return !!this.sub.value; }
+  get isAdmin(): boolean          { return this.sub.value?.role === 'ADMIN'; }
   get isEmpresario(): boolean     { return this.sub.value?.role === 'EMPRESARIO'; }
   get isTrabajador(): boolean     { return this.sub.value?.role === 'TRABAJADOR'; }
 

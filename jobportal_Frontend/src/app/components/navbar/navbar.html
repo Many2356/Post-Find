@@ -11,7 +11,7 @@
 
     <div class="collapse navbar-collapse" [class.show]="menuOpen">
       <ul class="navbar-nav me-auto">
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="!auth.isAdmin">
           <a class="nav-link" routerLink="/" routerLinkActive="active"
             [routerLinkActiveOptions]="{exact:true}" (click)="closeMenu()">
             <i class="bi bi-house-fill me-1"></i>Inicio
@@ -20,6 +20,11 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/ofertas" routerLinkActive="active" (click)="closeMenu()">
             <i class="bi bi-briefcase-fill me-1"></i>Ofertas
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="auth.isAdmin">
+          <a class="nav-link" routerLink="/admin/usuarios" routerLinkActive="active" (click)="closeMenu()">
+            <i class="bi bi-people-fill me-1"></i>Usuarios
           </a>
         </li>
       </ul>
@@ -41,11 +46,14 @@
         <ng-container *ngIf="auth.isLoggedIn">
           <li class="nav-item">
             <span class="nav-link text-light" style="opacity:.7;font-size:.85rem">
-              <i class="bi bi-circle-fill me-1" style="color:#22c55e;font-size:.5rem"></i>
+              <i class="bi bi-circle-fill me-1" 
+                [style.color]="auth.isAdmin ? '#f59e0b' : '#22c55e'"
+                style="font-size:.5rem"></i>
               {{ auth.currentUser?.username }}
+              <span *ngIf="auth.isAdmin" class="badge bg-warning text-dark ms-1" style="font-size:.65rem">ADMIN</span>
             </span>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="!auth.isAdmin">
             <a class="nav-link" routerLink="/perfil" routerLinkActive="active" (click)="closeMenu()">
               <i class="bi bi-person-circle me-1"></i>Perfil
             </a>

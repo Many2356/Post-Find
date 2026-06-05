@@ -8,6 +8,7 @@ import { OfertaForm } from './components/oferta-form/oferta-form';
 import { OfertaDetalle } from './components/oferta-detalle/oferta-detalle';
 import { Perfil } from './components/perfil/perfil';
 import { Candidatos } from './components/candidatos/candidatos';
+import { AdminUsuarios } from './components/admin-usuarios/admin-usuarios';
 
 const routes: Routes = [
   { 
@@ -45,6 +46,10 @@ const routes: Routes = [
   { 
     path: 'perfil', 
     component: Perfil
+  },
+  {
+    path: 'admin/usuarios',
+    component: AdminUsuarios
   },
   { 
     path: '**', 

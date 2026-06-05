@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public class DTOs {
 
-    // ── Auth DTOs ─────────────────────────────────────────────
+    // ─ Auth DTOs 
     public static class RegisterRequest {
         @NotBlank private String username;
         @NotBlank @Email private String email;
@@ -76,6 +76,41 @@ public class DTOs {
         public String getWebsite() { return website; }
         public String getSkills() { return skills; }
         public String getCompany() { return company; }
+
+        // Setters (necesarios para construir la respuesta del admin)
+        public void setId(Long id) { this.id = id; }
+        public void setUsername(String u) { this.username = u; }
+        public void setEmail(String e) { this.email = e; }
+        public void setRole(String r) { this.role = r; }
+        public void setFullName(String f) { this.fullName = f; }
+        public void setBio(String b) { this.bio = b; }
+        public void setLocation(String l) { this.location = l; }
+        public void setWebsite(String w) { this.website = w; }
+        public void setSkills(String s) { this.skills = s; }
+        public void setCompany(String c) { this.company = c; }
+    }
+
+    //  Admin: request para crear / editar usuario 
+    public static class AdminUpdateUserRequest {
+        private String username;
+        private String email;
+        private String password;
+        private String role;
+        private String fullName;
+        private String company;
+
+        public String getUsername() { return username; }
+        public void setUsername(String username) { this.username = username; }
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
+        public String getRole() { return role; }
+        public void setRole(String role) { this.role = role; }
+        public String getFullName() { return fullName; }
+        public void setFullName(String fullName) { this.fullName = fullName; }
+        public String getCompany() { return company; }
+        public void setCompany(String company) { this.company = company; }
     }
 
     public static class UpdateProfileRequest {
@@ -106,7 +141,7 @@ public class DTOs {
         public void setRole(String role) { this.role = role; }
     }
 
-    // ── JobOffer DTOs ─────────────────────────────────────────
+    // - JobOffer DTOs 
     public static class JobOfferRequest {
         @NotBlank private String title;
         private String description;
@@ -187,7 +222,7 @@ public class DTOs {
         public void setApplicantsCount(int applicantsCount) { this.applicantsCount = applicantsCount; }
     }
 
-    // ── Application DTOs ──────────────────────────────────────
+    // ─ Application DTOs 
     public static class ApplicationRequest {
         private String coverLetter;
         public String getCoverLetter() { return coverLetter; }

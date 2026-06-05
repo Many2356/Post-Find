@@ -33,7 +33,7 @@ export class Login {
       next: (user) => {
         this.loading = false;
         this.auth.setUser(user);
-        this.router.navigate(['/ofertas']);
+        this.router.navigate([user.role === 'ADMIN' ? '/admin/usuarios' : '/ofertas']);
       },
       error: (err) => {
         this.loading = false;

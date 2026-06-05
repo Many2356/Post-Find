@@ -16,6 +16,7 @@ import { Perfil } from './components/perfil/perfil';
 import { provideHttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Candidatos } from './components/candidatos/candidatos';
+import { AdminUsuarios } from './components/admin-usuarios/admin-usuarios';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { Candidatos } from './components/candidatos/candidatos';
     OfertaDetalle,
     OfertaForm,
     Perfil,
-    Candidatos
+    Candidatos,
+    AdminUsuarios
     
   ],
   imports: [

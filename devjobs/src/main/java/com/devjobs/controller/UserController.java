@@ -68,4 +68,29 @@ public class UserController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
+
+    // ─ Admin  
+    @GetMapping
+    public ResponseEntity<?> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @PostMapping("/admin/create")
+    public ResponseEntity<?> adminCreate(@RequestBody DTOs.AdminUpdateUserRequest request) {
+        try {
+            return ResponseEntity.ok(userService.adminCreateUser(request));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PutMapping("/admin/{id}")
+    public ResponseEntity<?> adminUpdate(@PathVariable Long id,
+                                         @RequestBody DTOs.AdminUpdateUserRequest request) {
+        try {
+            return ResponseEntity.ok(userService.adminUpdateUser(id, request));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
 }
