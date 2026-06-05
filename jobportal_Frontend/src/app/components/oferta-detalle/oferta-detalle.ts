@@ -52,7 +52,7 @@ export class OfertaDetalle implements OnInit {
           this.applicationService.hasApplied(this.auth.currentUser.id, id).subscribe({
             next: (res) => {
               this.hasSolicited = res.applied;
-              // ← NUEVO: si ya solicitó, buscamos el id de la solicitud
+              // si ya solicitó, buscamos el id de la solicitud
               if (res.applied) {
                 this.applicationService.getByUser(this.auth.currentUser!.id).subscribe({
                   next: (apps) => {
@@ -90,7 +90,7 @@ export class OfertaDetalle implements OnInit {
     ).subscribe({
       next: (app) => {
         this.hasSolicited = true;
-        this.applicationId = app.id;   // ← NUEVO: guardamos el id devuelto por el backend
+        this.applicationId = app.id;   // guardar el id devuelto por el backend
         this.applying = false;
         this.applySuccess = true;
         this.cdr.detectChanges();
@@ -154,5 +154,11 @@ export class OfertaDetalle implements OnInit {
 
   isOwner(): boolean {
     return this.auth.isEmpresario && this.auth.currentUser?.id === this.oferta?.employerId;
+  }
+
+  // Devuelve true si el usuario (sea cual sea su rol actual) creó esta oferta
+  // Usuario que creo el oferta no lo puede solicitar
+  isOwnOffer(): boolean {
+    return !!this.auth.currentUser && this.auth.currentUser.id === this.oferta?.employerId;
   }
 }

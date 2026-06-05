@@ -37,6 +37,10 @@ public class ApplicationService {
         JobOffer jobOffer = jobOfferRepository.findById(jobOfferId)
                 .orElseThrow(() -> new RuntimeException("Oferta no encontrada"));
 
+        if (jobOffer.getEmployer() != null && jobOffer.getEmployer().getId().equals(applicantId)) {
+            throw new RuntimeException("No puedes solicitar una oferta que tú mismo has publicado");
+        }
+
         if (applicationRepository.existsByApplicantAndJobOffer(applicant, jobOffer)) {
             throw new RuntimeException("Ya has solicitado esta oferta");
         }

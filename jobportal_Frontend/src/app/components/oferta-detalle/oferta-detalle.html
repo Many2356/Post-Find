@@ -123,6 +123,13 @@
             <!-- Bloque trabajador -->
             <ng-container *ngIf="auth.isTrabajador">
 
+              <!-- Oferta propia (era empresario cuando la creó) -->
+              <div *ngIf="isOwnOffer()" class="text-center text-muted small">
+                <i class="bi bi-info-circle me-1"></i>No puedes solicitar una oferta que tú mismo has publicado.
+              </div>
+
+              <ng-container *ngIf="!isOwnOffer()">
+
               <!-- Error al solicitar / retirar -->
               <div class="alert alert-danger py-2 small mb-3" *ngIf="applyError">
                 <i class="bi bi-exclamation-circle me-1"></i>{{ applyError }}
@@ -160,7 +167,9 @@
                 </button>
               </div>
 
-            </ng-container>
+              </ng-container> <!-- /!isOwnOffer -->
+
+            </ng-container> <!-- /isTrabajador -->
 
             <div *ngIf="auth.isEmpresario && !isOwner()" class="text-center text-muted small">
               <i class="bi bi-info-circle me-1"></i>Eres empresario; solo puedes publicar ofertas.
