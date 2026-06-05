@@ -1,0 +1,170 @@
+<div style="min-height:100vh;background:#f1f5f9;padding-bottom:3rem">
+
+  <!-- Loading -->
+  <div class="text-center py-5" *ngIf="loading">
+    <div class="spinner-border text-primary" style="width:3rem;height:3rem"></div>
+    <p class="text-muted mt-3">Cargando oferta...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="container py-5" *ngIf="!loading && error">
+    <div class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+      <a routerLink="/ofertas" class="alert-link ms-2">← Volver a ofertas</a>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!loading && !error && oferta">
+
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#0f172a,#1e3a5f);padding:2.5rem 0 2rem">
+      <div class="container">
+        <a routerLink="/ofertas" class="text-decoration-none mb-3 d-inline-block"
+          style="color:#94a3b8;font-size:.9rem">
+          <i class="bi bi-arrow-left me-1"></i>Volver a ofertas
+        </a>
+        <div class="d-flex align-items-start gap-4 flex-wrap">
+          <div class="company-avatar" style="width:64px;height:64px;font-size:1.8rem;border-radius:14px">
+            {{ oferta.company.charAt(0).toUpperCase() }}
+          </div>
+          <div class="flex-grow-1">
+            <h1 class="fw-bold text-white mb-1" style="font-size:1.8rem">{{ oferta.title }}</h1>
+            <p class="mb-2 fw-semibold" style="color:#60a5fa;font-size:1rem">{{ oferta.company }}</p>
+            <div class="d-flex flex-wrap gap-3" style="font-size:.85rem;color:#94a3b8">
+              <span *ngIf="oferta.location"><i class="bi bi-geo-alt me-1"></i>{{ oferta.location }}</span>
+              <span *ngIf="oferta.contractType"><i class="bi bi-file-text me-1"></i>{{ oferta.contractType }}</span>
+              <span *ngIf="oferta.experienceLevel"><i class="bi bi-bar-chart me-1"></i>{{ oferta.experienceLevel }}</span>
+              <span *ngIf="oferta.remote" style="color:#6ee7b7"><i class="bi bi-wifi me-1"></i>{{ oferta.remote }}</span>
+              <span *ngIf="oferta.salary" style="color:#fbbf24"><i class="bi bi-cash me-1"></i>{{ oferta.salary }}</span>
+            </div>
+          </div>
+          <!-- Acciones del propietario -->
+          <div *ngIf="isOwner()" class="d-flex gap-2 mt-2 mt-lg-0">
+            <button class="btn btn-warning btn-sm px-3" (click)="editarOferta()">
+              <i class="bi bi-pencil me-1"></i>Editar
+            </button>
+            <button class="btn btn-danger btn-sm px-3" (click)="eliminarOferta()" [disabled]="deletingOffer">
+              <i class="bi bi-trash me-1"></i>Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container py-4">
+      <div class="row g-4">
+
+        <!-- Columna principal -->
+        <div class="col-lg-8">
+
+          <!-- Éxito -->
+          <div class="alert alert-success d-flex align-items-center gap-2" *ngIf="applySuccess">
+            <i class="bi bi-check-circle-fill fs-5"></i>
+            <span>¡Solicitud enviada correctamente! La empresa revisará tu perfil.</span>
+          </div>
+
+          <!-- Descripción -->
+          <div class="card p-4 mb-4">
+            <h5 class="fw-bold mb-3">
+              <i class="bi bi-file-text me-2 text-primary"></i>Descripción del puesto
+            </h5>
+            <div class="text-muted" style="line-height:1.7;white-space:pre-line">
+              {{ oferta.description || 'Sin descripción disponible.' }}
+            </div>
+          </div>
+
+          <!-- Tecnologías -->
+          <div class="card p-4" *ngIf="getTechs().length > 0">
+            <h5 class="fw-bold mb-3">
+              <i class="bi bi-code-slash me-2 text-primary"></i>Tecnologías requeridas
+            </h5>
+            <div class="d-flex flex-wrap gap-2">
+              <span *ngFor="let t of getTechs()" class="badge-tech px-3 py-2" style="font-size:.85rem">{{ t }}</span>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="col-lg-4">
+
+          <!-- Card de acción -->
+          <div class="card p-4 mb-4">
+            <h6 class="fw-bold mb-3">Resumen de la oferta</h6>
+            <ul class="list-unstyled mb-4" style="font-size:.9rem">
+              <li class="d-flex justify-content-between py-2 border-bottom" *ngIf="oferta.company">
+                <span class="text-muted">Empresa</span>
+                <span class="fw-semibold">{{ oferta.company }}</span>
+              </li>
+              <li class="d-flex justify-content-between py-2 border-bottom" *ngIf="oferta.location">
+                <span class="text-muted">Ubicación</span>
+                <span class="fw-semibold">{{ oferta.location }}</span>
+              </li>
+              <li class="d-flex justify-content-between py-2 border-bottom" *ngIf="oferta.salary">
+                <span class="text-muted">Salario</span>
+                <span class="fw-semibold text-success">{{ oferta.salary }}</span>
+              </li>
+              <li class="d-flex justify-content-between py-2 border-bottom" *ngIf="oferta.contractType">
+                <span class="text-muted">Contrato</span>
+                <span class="fw-semibold">{{ oferta.contractType }}</span>
+              </li>
+              <li class="d-flex justify-content-between py-2 border-bottom" *ngIf="oferta.experienceLevel">
+                <span class="text-muted">Experiencia</span>
+                <span class="fw-semibold">{{ oferta.experienceLevel }}</span>
+              </li>
+              <li class="d-flex justify-content-between py-2" *ngIf="oferta.remote">
+                <span class="text-muted">Modalidad</span>
+                <span class="fw-semibold text-success">{{ oferta.remote }}</span>
+              </li>
+            </ul>
+
+            <ng-container *ngIf="auth.isTrabajador">
+              <div *ngIf="hasSolicited" class="alert alert-success py-2 text-center small mb-0">
+                <i class="bi bi-check-circle-fill me-1"></i>Ya has solicitado esta oferta
+              </div>
+              <div *ngIf="!hasSolicited">
+                <div class="alert alert-danger py-2 small" *ngIf="applyError">{{ applyError }}</div>
+                <div class="mb-3">
+                  <label class="form-label small fw-semibold">
+                    Carta de presentación <span class="text-muted">(opcional)</span>
+                  </label>
+                  <textarea class="form-control" rows="4" [(ngModel)]="coverLetter"
+                    placeholder="Cuéntale a la empresa por qué eres el candidato ideal..."></textarea>
+                </div>
+                <button class="btn btn-primary w-100 fw-semibold py-2" (click)="solicitar()" [disabled]="applying">
+                  <span class="spinner-border spinner-border-sm me-2" *ngIf="applying"></span>
+                  <i class="bi bi-send-fill me-2" *ngIf="!applying"></i>
+                  {{ applying ? 'Enviando...' : 'Solicitar esta oferta' }}
+                </button>
+              </div>
+            </ng-container>
+
+            <div *ngIf="auth.isEmpresario && !isOwner()" class="text-center text-muted small">
+              <i class="bi bi-info-circle me-1"></i>Eres empresario; solo puedes publicar ofertas.
+            </div>
+
+            <div *ngIf="!auth.isLoggedIn" class="text-center">
+              <p class="text-muted small mb-2">Inicia sesión para solicitar esta oferta</p>
+              <a routerLink="/login" class="btn btn-primary w-100">Iniciar sesión</a>
+            </div>
+          </div>
+
+          <!-- Info adicional -->
+          <div class="card p-4">
+            <h6 class="fw-bold mb-3">
+              <i class="bi bi-info-circle me-2 text-primary"></i>Información
+            </h6>
+            <div class="text-muted small">
+              <p class="mb-2">
+                <i class="bi bi-people me-2"></i>{{ oferta.applicantsCount || 0 }} candidatos han solicitado
+              </p>
+              <p class="mb-0">
+                <i class="bi bi-calendar me-2"></i>Publicado el {{ oferta.createdAt | date:'dd/MM/yyyy' }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </ng-container>
+</div>

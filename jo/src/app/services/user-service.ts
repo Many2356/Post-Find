@@ -5,7 +5,7 @@ import { User, RegisterRequest, LoginRequest, UpdateProfileRequest } from '../mo
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private api = 'https://devjobs-dgzo.onrender.com/api/users';
+  private api = 'http://localhost:8080/api/users';
 
   constructor(private http: HttpClient) {}
 
