@@ -5,7 +5,7 @@ import { JobOffer, JobOfferRequest } from '../models/job-offer';
 
 @Injectable({ providedIn: 'root' })
 export class JobOfferService {
-  private api = 'https://devjobs-dgzo.onrender.com/api/offers';
+  private api = 'https://devjobs-l0bz.onrender.com/api/offers';
 
   constructor(private http: HttpClient) {}
 

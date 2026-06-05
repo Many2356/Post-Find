@@ -5,7 +5,7 @@ import { Application, ApplicationRequest } from '../models/application';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicationService {
-  private api = 'https://devjobs-dgzo.onrender.com/api/applications';
+  private api = 'https://devjobs-l0bz.onrender.com/api/applications';
 
   constructor(private http: HttpClient) {}
 
