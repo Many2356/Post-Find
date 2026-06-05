@@ -106,26 +106,38 @@ export class Perfil implements OnInit {
     });
   }
 
+  //  retirar solicitud desde el perfil
+  retirarSolicitud(app: Application) {
+    if (!confirm('¿Retirar tu solicitud para "' + app.jobOfferTitle + '"?')) return;
+    this.applicationService.withdraw(app.id, this.auth.currentUser!.id).subscribe({
+      next: () => {
+        this.applications = this.applications.filter(a => a.id !== app.id);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        alert(err.error?.error || 'Error al retirar la solicitud.');
+      }
+    });
+  }
+
   getInicial(username: string): string { return username ? username.charAt(0).toUpperCase() : '?'; }
+
   getStatusClass(status: string): string {
     const map: any = { PENDIENTE: 'warning', REVISADO: 'info', ACEPTADO: 'success', RECHAZADO: 'danger' };
     return map[status] || 'secondary';
   }
-  verOferta(id: number)    { 
-    this.router.navigate(['/ofertas', id]); 
-  }
-  editarOferta(id: number) { 
-    this.router.navigate(['/ofertas/editar', id]); 
-  }
+
+  verOferta(id: number)    { this.router.navigate(['/ofertas', id]); }
+  editarOferta(id: number) { this.router.navigate(['/ofertas/editar', id]); }
+
   eliminarOferta(id: number) {
     if (!confirm('¿Eliminar esta oferta?')) return;
     this.jobOfferService.delete(id, this.auth.currentUser!.id).subscribe({
-      next: () => { 
-        this.myOffers = this.myOffers.filter(o => o.id !== id); this.cdr.detectChanges(); 
+      next: () => {
+        this.myOffers = this.myOffers.filter(o => o.id !== id);
+        this.cdr.detectChanges();
       },
-      error: (err) => { 
-        alert(err.error?.error || 'Error al eliminar'); 
-      }
+      error: (err) => { alert(err.error?.error || 'Error al eliminar'); }
     });
   }
 }

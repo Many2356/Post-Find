@@ -57,7 +57,7 @@
         <!-- Columna principal -->
         <div class="col-lg-8">
 
-          <!-- Éxito -->
+          <!-- Éxito al solicitar -->
           <div class="alert alert-success d-flex align-items-center gap-2" *ngIf="applySuccess">
             <i class="bi bi-check-circle-fill fs-5"></i>
             <span>¡Solicitud enviada correctamente! La empresa revisará tu perfil.</span>
@@ -84,7 +84,7 @@
           </div>
         </div>
 
-        
+        <!-- Columna lateral -->
         <div class="col-lg-4">
 
           <!-- Card de acción -->
@@ -117,12 +117,32 @@
               </li>
             </ul>
 
+            <!-- Bloque trabajador -->
             <ng-container *ngIf="auth.isTrabajador">
-              <div *ngIf="hasSolicited" class="alert alert-success py-2 text-center small mb-0">
-                <i class="bi bi-check-circle-fill me-1"></i>Ya has solicitado esta oferta
+
+              <!-- Error al solicitar / retirar -->
+              <div class="alert alert-danger py-2 small mb-3" *ngIf="applyError">
+                <i class="bi bi-exclamation-circle me-1"></i>{{ applyError }}
               </div>
+
+              <!-- Ya solicitó -->
+              <div *ngIf="hasSolicited">
+                <div class="alert alert-success py-2 text-center small mb-2">
+                  <i class="bi bi-check-circle-fill me-1"></i>Ya has solicitado esta oferta
+                </div>
+                <!-- ← NUEVO: botón para retirar la solicitud -->
+                <button
+                  class="btn btn-outline-danger w-100 fw-semibold py-2"
+                  (click)="retirarSolicitud()"
+                  [disabled]="withdrawing || !applicationId">
+                  <span class="spinner-border spinner-border-sm me-2" *ngIf="withdrawing"></span>
+                  <i class="bi bi-x-circle me-2" *ngIf="!withdrawing"></i>
+                  {{ withdrawing ? 'Retirando...' : 'Retirar solicitud' }}
+                </button>
+              </div>
+
+              <!-- No ha solicitado -->
               <div *ngIf="!hasSolicited">
-                <div class="alert alert-danger py-2 small" *ngIf="applyError">{{ applyError }}</div>
                 <div class="mb-3">
                   <label class="form-label small fw-semibold">
                     Carta de presentación <span class="text-muted">(opcional)</span>
@@ -136,6 +156,7 @@
                   {{ applying ? 'Enviando...' : 'Solicitar esta oferta' }}
                 </button>
               </div>
+
             </ng-container>
 
             <div *ngIf="auth.isEmpresario && !isOwner()" class="text-center text-muted small">
