@@ -1,0 +1,106 @@
+<div style="min-height:100vh;background:#f1f5f9;padding-bottom:3rem">
+
+  <!-- Loading -->
+  <div class="text-center py-5" *ngIf="loading">
+    <div class="spinner-border text-primary" style="width:3rem;height:3rem"></div>
+    <p class="text-muted mt-3">Cargando candidatos...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="container py-5" *ngIf="!loading && error">
+    <div class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+      <a routerLink="/perfil" class="alert-link ms-2">← Volver al perfil</a>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!loading && !error && oferta">
+
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#0f172a,#1e3a5f);padding:2rem 0">
+      <div class="container">
+        <button class="btn btn-sm mb-3 text-decoration-none"
+          style="color:#94a3b8;font-size:.9rem;background:none;border:none;padding:0"
+          (click)="volver()">
+          <i class="bi bi-arrow-left me-1"></i>Volver a la oferta
+        </button>
+        <h1 class="fw-bold text-white mb-1" style="font-size:1.6rem">
+          <i class="bi bi-people-fill me-2" style="color:#60a5fa"></i>Candidatos
+        </h1>
+        <p style="color:#94a3b8;margin:0">
+          {{ oferta.title }} · {{ oferta.company }}
+          <span class="ms-3">
+            <i class="bi bi-person me-1"></i>{{ applications.length }} candidato{{ applications.length !== 1 ? 's' : '' }}
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <div class="container py-4">
+
+      <!-- Sin candidatos -->
+      <div class="card p-5 text-center" *ngIf="applications.length === 0">
+        <i class="bi bi-inbox" style="font-size:3rem;color:#cbd5e1"></i>
+        <h5 class="mt-3 text-muted">Aún no hay candidatos para esta oferta</h5>
+        <p class="text-muted small mb-0">Cuando alguien solicite la oferta aparecerá aquí.</p>
+      </div>
+
+      <!-- Lista de candidatos -->
+      <div class="row g-3" *ngIf="applications.length > 0">
+        <div class="col-12" *ngFor="let app of applications">
+          <div class="card p-4">
+            <div class="d-flex align-items-start gap-4 flex-wrap">
+
+              <!-- Avatar -->
+              <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#7c3aed);
+                          display:flex;align-items:center;justify-content:center;flex-shrink:0;
+                          font-size:1.3rem;font-weight:700;color:#fff">
+                {{ app.applicantUsername?.charAt(0)?.toUpperCase() }}
+              </div>
+
+              <!-- Info candidato -->
+              <div class="flex-grow-1">
+                <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                  <h6 class="fw-bold mb-0">{{ app.applicantUsername }}</h6>
+                  <span class="badge bg-{{ getStatusClass(app.status) }}">
+                    <i class="bi {{ getStatusIcon(app.status) }} me-1"></i>{{ app.status }}
+                  </span>
+                  <span *ngIf="updatingId === app.id" class="spinner-border spinner-border-sm text-primary"></span>
+                </div>
+                <p class="text-muted small mb-0">
+                  <i class="bi bi-clock me-1"></i>Solicitó el {{ app.appliedAt | date:'dd/MM/yyyy · HH:mm' }}
+                </p>
+                <!-- Carta de presentación -->
+                <div class="mt-2" *ngIf="app.coverLetter">
+                  <p class="text-muted small mb-1 fw-semibold">
+                    <i class="bi bi-chat-left-text me-1"></i>Carta de presentación:
+                  </p>
+                  <p class="small mb-0" style="background:#f8fafc;border-radius:8px;padding:.6rem .9rem;
+                                               border-left:3px solid #2563eb;color:#334155;white-space:pre-line">
+                    {{ app.coverLetter }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Selector de estado -->
+              <div class="d-flex flex-column gap-1 flex-shrink-0" style="min-width:160px">
+                <label class="form-label small fw-semibold mb-1" style="color:#64748b">
+                  <i class="bi bi-arrow-repeat me-1"></i>Cambiar estado
+                </label>
+                <select
+                  class="form-select form-select-sm"
+                  [value]="app.status"
+                  [disabled]="updatingId === app.id"
+                  (change)="cambiarEstado(app, $any($event.target).value)">
+                  <option *ngFor="let e of ESTADOS" [value]="e">{{ e }}</option>
+                </select>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </ng-container>
+</div>

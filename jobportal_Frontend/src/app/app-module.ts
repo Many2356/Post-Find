@@ -15,6 +15,7 @@ import { OfertaForm } from './components/oferta-form/oferta-form';
 import { Perfil } from './components/perfil/perfil';
 import { provideHttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Candidatos } from './components/candidatos/candidatos';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { CommonModule } from '@angular/common';
     Ofertas,
     OfertaDetalle,
     OfertaForm,
-    Perfil
+    Perfil,
+    Candidatos
     
   ],
   imports: [

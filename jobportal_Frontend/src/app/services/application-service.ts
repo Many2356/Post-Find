@@ -33,4 +33,12 @@ export class ApplicationService {
   withdraw(applicationId: number, applicantId: number): Observable<any> {
     return this.http.delete(`${this.api}/${applicationId}?applicantId=${applicantId}`);
   }
+
+  // El empresario actualiza el estado de una solicitud
+  updateStatus(applicationId: number, employerId: number, status: string): Observable<Application> {
+    return this.http.patch<Application>(
+      `${this.api}/${applicationId}/status?employerId=${employerId}`,
+      { status }
+    );
+  }
 }

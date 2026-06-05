@@ -7,6 +7,7 @@ import { Ofertas } from './components/ofertas/ofertas';
 import { OfertaForm } from './components/oferta-form/oferta-form';
 import { OfertaDetalle } from './components/oferta-detalle/oferta-detalle';
 import { Perfil } from './components/perfil/perfil';
+import { Candidatos } from './components/candidatos/candidatos';
 
 const routes: Routes = [
   { 
@@ -36,6 +37,10 @@ const routes: Routes = [
   { 
     path: 'ofertas/:id', 
     component: OfertaDetalle
+  },
+  {
+    path: 'ofertas/:id/candidatos',
+    component: Candidatos
   },
   { 
     path: 'perfil', 

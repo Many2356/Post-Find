@@ -15,7 +15,7 @@ export class OfertaDetalle implements OnInit {
   loading = true;
   error = '';
   hasSolicited = false;
-  applicationId: number | null = null;   // guardar el id de la solicitud
+  applicationId: number | null = null;   // guardamos el id de la solicitud
   applying = false;
   withdrawing = false;                   // estado de carga al retirar
   applySuccess = false;
@@ -103,7 +103,7 @@ export class OfertaDetalle implements OnInit {
     });
   }
 
-  // método para retirar la solicitud
+  //  método para retirar la solicitud
   retirarSolicitud() {
     if (!this.applicationId) return;
     if (!confirm('¿Retirar tu solicitud para esta oferta?')) return;
@@ -124,6 +124,10 @@ export class OfertaDetalle implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  verCandidatos() {
+    this.router.navigate(['/ofertas', this.oferta!.id, 'candidatos']);
   }
 
   editarOferta() {

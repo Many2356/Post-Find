@@ -39,7 +39,10 @@
             </div>
           </div>
           <!-- Acciones del propietario -->
-          <div *ngIf="isOwner()" class="d-flex gap-2 mt-2 mt-lg-0">
+          <div *ngIf="isOwner()" class="d-flex gap-2 mt-2 mt-lg-0 flex-wrap">
+            <button class="btn btn-info btn-sm px-3 text-white" (click)="verCandidatos()">
+              <i class="bi bi-people-fill me-1"></i>Ver candidatos
+            </button>
             <button class="btn btn-warning btn-sm px-3" (click)="editarOferta()">
               <i class="bi bi-pencil me-1"></i>Editar
             </button>
