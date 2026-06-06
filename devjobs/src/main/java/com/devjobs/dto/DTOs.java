@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public class DTOs {
 
-    // ─ Auth DTOs 
+    //  Auth DTOs 
     public static class RegisterRequest {
         @NotBlank private String username;
         @NotBlank @Email private String email;
@@ -141,7 +141,7 @@ public class DTOs {
         public void setRole(String role) { this.role = role; }
     }
 
-    // - JobOffer DTOs 
+    //  JobOffer DTOs 
     public static class JobOfferRequest {
         @NotBlank private String title;
         private String description;
@@ -222,7 +222,7 @@ public class DTOs {
         public void setApplicantsCount(int applicantsCount) { this.applicantsCount = applicantsCount; }
     }
 
-    // ─ Application DTOs 
+    //  Application DTOs 
     public static class ApplicationRequest {
         private String coverLetter;
         public String getCoverLetter() { return coverLetter; }
